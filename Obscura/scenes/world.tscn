@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://88du8yjefx8j"]
+[gd_scene load_steps=13 format=4 uid="uid://88du8yjefx8j"]
 
 [ext_resource type="PackedScene" uid="uid://dtm13sp1jsrwi" path="res://scenes/vessel.tscn" id="1_oaql3"]
 [ext_resource type="Script" path="res://scripts/camera_selector.gd" id="2_qffo5"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/camera_controllers/position_lock.gd" id="5_58fvi"]
 [ext_resource type="AudioStream" uid="uid://6tbtl0jk0dlo" path="res://assets/audio/VGMA Challenge - July 16th.wav" id="5_o8tm3"]
 [ext_resource type="Script" path="res://scripts/camera_controllers/horizontal_auto_scroll.gd" id="6_ikys4"]
+[ext_resource type="Script" path="res://scripts/camera_controllers/position_lock_and_lerp.gd" id="7_6akqo"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_kh4bf"]
 _surfaces = [{
@@ -43,7 +44,7 @@ terrain_manager = NodePath("../TerrainManager")
 
 [node name="CameraSelector" type="Node" parent="." node_paths=PackedStringArray("cameras")]
 script = ExtResource("2_qffo5")
-cameras = [NodePath("PositionLockCamera"), NodePath("HorizontalAutoScrollCamera"), NodePath("PushBoxCamera3"), NodePath("PushBoxCamera4"), NodePath("PushBoxCamera5")]
+cameras = [NodePath("PositionLockCamera"), NodePath("HorizontalAutoScrollCamera"), NodePath("PosLockAndLerp"), NodePath("PushBoxCamera4"), NodePath("PushBoxCamera5")]
 
 [node name="PositionLockCamera" parent="CameraSelector" node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 30, 0)
@@ -59,7 +60,11 @@ script = ExtResource("3_4fllx")
 [node name="HorizontalAutoScrollCamera" parent="CameraSelector" node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 30, 0)
 script = ExtResource("6_ikys4")
+top_left = Vector2(-10, 10)
+bottom_right = Vector2(10, -10)
+autoscroll_speed = Vector3(5, 0, 5)
 target = NodePath("../../Vessel")
+dist_above_target = 25.0
 
 [node name="debug" type="Label" parent="CameraSelector/HorizontalAutoScrollCamera"]
 visible = false
@@ -67,11 +72,12 @@ offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("3_4fllx")
 
-[node name="PushBoxCamera3" parent="CameraSelector" node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
+[node name="PosLockAndLerp" parent="CameraSelector" node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 30, 0)
+script = ExtResource("7_6akqo")
 target = NodePath("../../Vessel")
 
-[node name="debug" type="Label" parent="CameraSelector/PushBoxCamera3"]
+[node name="debug" type="Label" parent="CameraSelector/PosLockAndLerp"]
 visible = false
 offset_right = 40.0
 offset_bottom = 23.0
