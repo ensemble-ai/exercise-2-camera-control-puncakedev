@@ -1,7 +1,6 @@
 class_name FourWay
 extends CameraControllerBase
 
-
 @export var box_width:float = 10.0
 @export var box_height:float = 10.0
 @export var push_ratio: float
@@ -9,7 +8,6 @@ extends CameraControllerBase
 @export var pushbox_bottom_right: Vector2
 @export var speedup_zone_top_left: Vector2
 @export var speedup_zone_bottom_right: Vector2
-
 
 
 func _ready() -> void:
