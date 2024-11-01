@@ -12,6 +12,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if !current:
+		position = target.position
 		return
 	
 	if draw_camera_logic:
@@ -38,7 +39,7 @@ func _process(delta: float) -> void:
 	if right_bound > 0:
 		target.global_position.x -= right_bound
 	
-	var bot_bound = (tpos.z - target.WIDTH / 2.0) - (cpos.z + bottom_right.y)
+	var bot_bound = (tpos.z - target.HEIGHT / 2.0) - (cpos.z + bottom_right.y)
 	if bot_bound < 0:
 		target.global_position.z -= bot_bound
 	

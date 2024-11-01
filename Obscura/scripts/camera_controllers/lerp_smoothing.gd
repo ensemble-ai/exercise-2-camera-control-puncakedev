@@ -1,14 +1,23 @@
-class_name PositionLockAndLerp
+class_name LerpSmoothing
 extends CameraControllerBase
 
-@export var follow_speed: float
+@export var lead_speed: float
+@export var catchup_delay_duration: float
 @export var catchup_speed: float
 @export var leash_distance: float
+
+var _timer:Timer = null
 
 func _ready() -> void:
 	super()
 	position = target.position
-
+	
+	#Taken from exercise 1
+	if _timer == null:
+		_timer = Timer.new()
+		add_child(_timer)
+		_timer.one_shot = true
+	
 
 func _process(delta: float) -> void:
 	if !current:
@@ -28,11 +37,11 @@ func _process(delta: float) -> void:
 		
 	#if vessel is moving
 	elif target.velocity != Vector3(0, 0, 0):
-		follow_speed = target.BASE_SPEED * 0.80
-		global_position += (tpos - cpos).normalized() * follow_speed * delta
+		global_position += tpos * delta * lead_speed
+		_timer.start(catchup_delay_duration)
 		
 	#if vessel is not moving
-	elif target.velocity == Vector3(0, 0, 0):
+	elif target.velocity == Vector3(0, 0, 0) and _timer.is_stopped():
 		global_position += target.BASE_SPEED * (tpos - cpos).normalized() * catchup_speed * delta
 		
 	super(delta)
